@@ -85,13 +85,17 @@ private:
 
     Node *getNode(Node *node, Key key);
 
+    Node *removeNode(Node *node, Key key);
+
     void clear(Node *node);
 
     void out(Node *node, int k);
 
     void printKeys(Node *node);
 
-    Node *findMaxNode();
+    Node *findMaxNode(Node *node);
+
+    Node *findMinNode(Node *node);
 
 
 public:
@@ -275,6 +279,65 @@ Data Tree<Key, Data>::getData(Key key) {
         return tmp->getData();
     } else
         throw runtime_error("EXCEPTION!");
+}
+
+template<class Key, class Data>
+typename Tree<Key, Data>::Node *Tree<Key, Data>::findMaxNode(Node *node) {
+    if (node == nullptr) {
+        exit(3);
+    }
+    if (node->right) {
+        return findMaxNode(node->right);
+    }
+    return node;
+}
+
+template<class Key, class Data>
+typename Tree<Key, Data>::Node *Tree<Key, Data>::findMinNode(Tree::Node *node) {
+    if (node == nullptr) {
+        exit(4);
+    }
+    if (node->left) {
+        return findMaxNode(node->left);
+    }
+    return node;
+}
+
+template<class Key, class Data>
+typename Tree<Key, Data>::Node *Tree<Key, Data>::removeNode(Tree::Node *node, Key key) {
+    if (node == nullptr) {
+        return nullptr;
+    }
+    if (node->getKey() > key) {
+        node->left = removeNode(node->left, key);
+        return node;
+    } else if (node->getKey() < key) {
+        node->right = removeNode(node->right, key);
+        return node;
+    } else {
+        if (node->left && node->right) {
+            Node *locMax = findMaxNode(node->left);
+            node->setKey(locMax->getKey());
+            node->left = removeNode(node->left, locMax->getKey());
+            return node;
+        } else if (node->left) {
+            Node *tmp = node->left;
+            delete node;
+            return tmp;
+        } else if (node->right) {
+            Node *tmp = node->right;
+            delete node;
+            return tmp;
+        } else {
+            delete node;
+            return nullptr;
+        }
+    }
+}
+
+template<class Key, class Data>
+bool Tree<Key, Data>::removeNode(Key key) {
+    return removeNode(root, key) != nullptr;
 }
 
 template<class Key, class Data>
