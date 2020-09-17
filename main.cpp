@@ -14,5 +14,6 @@ int main() {
     cout << tree.getData(8) << endl;
     cout << tree.setNode(8,133) << endl;
     cout << tree.getData(8) << endl;
+    cout << tree.getData(8) << endl;
     return 0;
 }
