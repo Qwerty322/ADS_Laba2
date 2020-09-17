@@ -3,4 +3,5 @@
 
 CMakeFiles/ADS_Laba2.dir/main.cpp.o: ../Tree.h
 CMakeFiles/ADS_Laba2.dir/main.cpp.o: ../main.cpp
+CMakeFiles/ADS_Laba2.dir/main.cpp.o: ../test.cpp
 

@@ -108,6 +108,8 @@ public:
 
     int getSize();
 
+    int getViewNode();
+
     void clear();
 
     bool isEmpty();
@@ -134,7 +136,6 @@ public:
 
     Tree::Reverse_Iterator rend();
 
-
 };
 
 template<class Key, class Data>
@@ -153,7 +154,7 @@ Tree<Key, Data>::Tree(Tree &Right) {
 
 template<class Key, class Data>
 Tree<Key, Data>::~Tree() {
-
+    clear();
 }
 
 template<class Key, class Data>
@@ -166,7 +167,6 @@ bool Tree<Key, Data>::isEmpty() {
     return root == nullptr;
 }
 
-
 template<class Key, class Data>
 typename Tree<Key, Data>::Node *Tree<Key, Data>::getNode(Tree::Node *node, Key key) {
     if (!node) {
@@ -174,11 +174,15 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::getNode(Tree::Node *node, Key k
     }
     if (node->getKey() > key) {
         node = getNode(node->left, key);
+        count_view++;
     } else if (node->getKey() < key) {
         node = getNode(node->right, key);
-    } else return node;
+        count_view++;
+    } else {
+        count_view++;
+        return node;
+    }
     return node;
-
 }
 
 template<class Key, class Data>
@@ -187,18 +191,22 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::addNode(Tree::Node *node, Key k
         Node *tmp = new Node(key, data);
         size++;
         root = tmp;
+        count_view++;
         return tmp;
     }
     if (node == nullptr) {
         Node *tmp = new Node(key, data);
         size++;
+        count_view++;
         return tmp;
     } else {
         if (key < node->getKey()) {
             node->left = addNode(node->left, key, data);
+            count_view++;
             return node;
         } else if (key > node->getKey()) {
             node->right = addNode(node->right, key, data);
+            count_view++;
             return node;
         } else return nullptr;
     }
@@ -217,6 +225,7 @@ template<class Key, class Data>
 void Tree<Key, Data>::clear() {
     if (isEmpty()) return;
     clear(root);
+    root = nullptr;
 }
 
 template<class Key, class Data>
@@ -244,6 +253,7 @@ void Tree<Key, Data>::printTree() {
 
 template<class Key, class Data>
 bool Tree<Key, Data>::addNode(Key key, Data data) {
+    count_view = 0;
     return addNode(root, key, data) != nullptr;
 }
 
@@ -287,6 +297,7 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::findMaxNode(Node *node) {
         exit(3);
     }
     if (node->right) {
+        count_view++;
         return findMaxNode(node->right);
     }
     return node;
@@ -298,7 +309,7 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::findMinNode(Tree::Node *node) {
         exit(4);
     }
     if (node->left) {
-        return findMaxNode(node->left);
+        return findMinNode(node->left);
     }
     return node;
 }
@@ -310,9 +321,11 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::removeNode(Tree::Node *node, Ke
     }
     if (node->getKey() > key) {
         node->left = removeNode(node->left, key);
+        count_view++;
         return node;
     } else if (node->getKey() < key) {
         node->right = removeNode(node->right, key);
+        count_view++;
         return node;
     } else {
         if (node->left && node->right) {
@@ -337,7 +350,26 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::removeNode(Tree::Node *node, Ke
 
 template<class Key, class Data>
 bool Tree<Key, Data>::removeNode(Key key) {
-    return removeNode(root, key) != nullptr;
+    count_view = 0;
+    if (removeNode(root, key) != nullptr) {
+        size--;
+        return true;
+    }
+    return false;
+}
+
+template<class Key, class Data>
+int Tree<Key, Data>::numberNode(Key key) {
+    count_view = 0;
+    Node *tmp = getNode(root, key);
+    if (tmp != nullptr) {
+        return count_view;
+    } else return -1;
+}
+
+template<class Key, class Data>
+int Tree<Key, Data>::getViewNode() {
+    return count_view;
 }
 
 template<class Key, class Data>
