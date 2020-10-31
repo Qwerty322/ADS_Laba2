@@ -1,7 +1,8 @@
 #include <time.h>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include "Tree.h"
+#include <stdlib.h>
 
 using namespace std;
 typedef unsigned long long INT_64;
@@ -21,19 +22,31 @@ void sRand() {
 //функция генерации случайного числа
 //линейный конгруэнтный генератор    Xi+1=(a*Xi+c)%m
 //habr.com/ru/post/208178
-INT_64 LineRand() {
-    INT_64 y1, y2;
-    y1 = (aRand * RRand + cRand) % mRand;
-    y2 = (aRand * y1 + cRand) % mRand;
-    RRand = y1 & 0xFFFFFFFF00000000LL ^ (y2 & 0xFFFFFFFF00000000LL) >> 32;
-    return RRand;
+unsigned long long LineRand() {
+//    INT_64 y1, y2;
+//    y1 = (aRand * RRand + cRand) % mRand;
+//    y2 = (aRand * y1 + cRand) % mRand;
+//    RRand = y1 & 0xFFFFFFFF00000000LL ^ (y2 & 0xFFFFFFFF00000000LL) >> 32;
+//    cout << "y1 " << y1 << endl;
+//    cout << "y2 " << y2 << endl;
+//    cout << "res y1 " << (y1 & 0xFFFFFFFF00000000LL) << endl;
+//    cout << "res y2 " << (y2 & 0xFFFFFFFF00000000LL) << endl;
+//    cout <<"Rand: " << RRand << endl;
+//    sRand();
+//    cout << "rand " << RRand << endl;
+//    unsigned long long a = ((rand() << 16) | rand());
+    unsigned long long a = rand();
+    unsigned long long b = rand();
+    a =((a << 16) | b);
+    cout << a << endl;
+    return a;
 }
 
 void test_rand(int n) {
     //создание дерева для 64 – разрядных ключей типа INT_64
     Tree<INT_64, int> tree;
     //массив для ключей, которые присутствуют в дереве
-    INT_64 *m = new INT_64[n];
+    auto *m = new INT_64[n];
 //установка первого случайного числа
     sRand();
 //заполнение дерева и массива элементами со случайными ключами
@@ -97,7 +110,7 @@ void test_ord(int n) {
     //создание дерева для 64 – разрядных ключей типа INT_64
     Tree<INT_64, int> tree;
     //массив для ключей, которые присутствуют в дереве
-    INT_64 *m = new INT_64[n];
+    auto *m = new INT_64[n];
 
 //заполнение дерева и массива элементами с возрастающими чётными //ключами на интервале [0, 10000, 20000, ... ,10000*n]
     for (int i = 0; i < n; i++) {
@@ -129,7 +142,7 @@ void test_ord(int n) {
                 S += tree.getViewNode();
             }
                 //обработка исключения при ошибке операции поиска
-            catch (int) { S += tree.getViewNode(); }
+            catch (runtime_error e) { S += tree.getViewNode(); }
         } else  //90% успешных операций
         {
             int ind = rand() % n;
@@ -145,7 +158,7 @@ void test_ord(int n) {
                 S += tree.getViewNode();;
             }
                 //обработка исключения при ошибке операции поиска
-            catch (int) { S += tree.getViewNode(); }
+            catch (runtime_error e) { S += tree.getViewNode(); }
         }
     }
 //вывод результатов:
