@@ -7,50 +7,50 @@
 using namespace std;
 
 template<class Key = int, class Data = int>
-class Tree {
+class Tree {  // Класс бинарного дерева
 private:
     class Node {
     private:
-        Key key;
-        Data data;
+        Key key;  // ключ
+        Data data;  // данные
 
     public:
-        Node *left;
-        Node *right;
+        Node *left;  // указатель на левый узел
+        Node *right; // указатель на правый узел
         int count = 0;
 
-        explicit Node(Key key, Data data = Data(), Node *left = nullptr, Node *right = nullptr);
+        explicit Node(Key key, Data data = Data(), Node *left = nullptr, Node *right = nullptr); // конструктор
 
-        Key getKey();
+        Key getKey(); // геттер
 
-        Data &getData();
+        Data &getData(); // геттер
 
-        void setKey(Key k);
+        void setKey(Key k);  // сеттер
 
-        void setData(Data d);
+        void setData(Data d); // сеттер
 
-    };
+    }; // Класс узла
 
-    int size;
-    int count_view;
+    int size;  // размер дерева
+    int count_view;  // вспомогательная переменная
 
-    Node *addNode(Node *node, Key key, Data data);
+    Node *addNode(Node *node, Key key, Data data, bool &flag);  // рекурсивная функция для добавления узла
 
-    Node *getNode(Node *node, Key key);
+    Node *getNode(Node *node, Key key);  // рекурсивная функция для получения данных узла
 
-    Node *removeNode(Node *node, Key key, bool &flag);
+    Node *removeNode(Node *node, Key key, bool &flag);  // рекурсивная функция удаления узла
 
-    void clear(Node *node);
+    void clear(Node *node);  // рекурсивная функция очистки дерева
 
-    void out(Node *node, int k);
+    void out(Node *node, int k);  // рекурсивная функция вывода дерева в консоль
 
-    void printKeys(Node *node);
+    void printKeys(Node *node);  // рекурсивный обход по дереву
 
-    Node *findMaxNode(Node *node);
+    Node *findMaxNode(Node *node);  // рекурсивный поиск максималльного ключа в дереве
 
-    Node *findMinNode(Node *node);
+    Node *findMinNode(Node *node);  // рекурсивный поиск минимального ключа в дереве
 
-    Node *getIndexByKey(Node *node, Key key, int &index);
+    Node *getIndexByKey(Node *node, Key key, int &index);  // рекурсивная функция подсчета порядкогово номера узла
 
 
 public:
@@ -90,7 +90,7 @@ public:
 
         bool operator!=(Iterator right);
 
-    };
+    }; // класс итератора
 
     class Reverse_Iterator {
     private:
@@ -124,43 +124,43 @@ public:
         bool operator==(Reverse_Iterator right);
 
         bool operator!=(Reverse_Iterator right);
-    };
+    }; // класс обратного итератора
 
-    Tree();
+    Tree();  // конструктор
 
-    Tree(Tree &Right);
+    Tree(Tree &Right);  // конструктор копирования
 
-    ~Tree();
+    ~Tree();  // деструктор
 
-    int getSize();
+    int getSize();  // получение количества элементов в дереве
 
-    int getViewNode();
+    int getViewNode(); // получение количества просмотренных узлов
 
-    void clear();
+    void clear();  // очистка дерева
 
-    bool isEmpty();
+    bool isEmpty();  // проверка на наличие элементов в дереве
 
-    Data getData(Key key);
+    Data &getData(Key key); // получение данных узла по ключу
 
-    bool setNode(Key key, Data data);
+    bool setNode(Key key, Data data);  // изменение данных узла по ключу
 
-    bool addNode(Key key, Data data);
+    bool addNode(Key key, Data data);  // добавление данных по ключу
 
-    bool removeNode(Key key);
+    bool removeNode(Key key);  // удаление узла по ключу
 
-    void printKeys();
+    void printKeys();  // вывод дерева
 
-    void printTree();
+    void printTree();  // обход дерева
 
-    int getIndexByKey(Key key);
+    int getIndexByKey(Key key);  // подсчет порядкого номера элемента по ключу
 
-    Tree::Iterator begin();
+    Tree::Iterator begin(); // установка итератора в начало
 
-    Tree::Iterator end();
+    Tree::Iterator end();  // установка итератора в конец
 
-    Tree::Reverse_Iterator rbegin();
+    Tree::Reverse_Iterator rbegin(); // установка обратного итератора в начало
 
-    Tree::Reverse_Iterator rend();
+    Tree::Reverse_Iterator rend(); // установка обратного итератера в конец
 
 };
 
@@ -475,33 +475,34 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::getNode(Tree::Node *node, Key k
 }
 
 template<class Key, class Data>
-typename Tree<Key, Data>::Node *Tree<Key, Data>::addNode(Tree::Node *node, Key key, Data data) {
+typename Tree<Key, Data>::Node *Tree<Key, Data>::addNode(Tree::Node *node, Key key, Data data, bool &flag) {
     if (root == nullptr) {
         Node *tmp = new Node(key, data);
         tmp->count++;
         size++;
         root = tmp;
-        count_view++;
         return tmp;
     }
     if (node == nullptr) {
         Node *tmp = new Node(key, data);
         tmp->count++;
         size++;
-        count_view++;
         return tmp;
     } else {
         if (key < node->getKey()) {
             node->count++;
-            node->left = addNode(node->left, key, data);
+            node->left = addNode(node->left, key, data, flag);
             count_view++;
             return node;
         } else if (key > node->getKey()) {
             node->count++;
-            node->right = addNode(node->right, key, data);
+            node->right = addNode(node->right, key, data, flag);
             count_view++;
             return node;
-        } else return nullptr;
+        } else {
+            flag = false;
+            return node;
+        };
     }
 }
 
@@ -548,7 +549,9 @@ void Tree<Key, Data>::printTree() {
 template<class Key, class Data>
 bool Tree<Key, Data>::addNode(Key key, Data data) {
     count_view = 0;
-    return addNode(root, key, data) != nullptr;
+    bool flag = true;
+    addNode(root, key, data, flag);
+    return flag;
 }
 
 template<class Key, class Data>
@@ -577,7 +580,7 @@ bool Tree<Key, Data>::setNode(Key key, Data data) {
 }
 
 template<class Key, class Data>
-Data Tree<Key, Data>::getData(Key key) {
+Data &Tree<Key, Data>::getData(Key key) {
     count_view = 0;
     Node *tmp = getNode(root, key);
     if (tmp) {
@@ -646,7 +649,7 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::removeNode(Tree::Node *node, Ke
             delete node;
             return tmp;
         } else {
-//            delete node;
+            delete node;
             return nullptr;
         }
     }
@@ -660,8 +663,7 @@ bool Tree<Key, Data>::removeNode(Key key) {
     if (!error_flag) {
         size--;
         return true;
-    }
-    return false;
+    } else return false;
 }
 
 template<class Key, class Data>
