@@ -69,7 +69,7 @@ public:
 
         void toEnd();
 
-        void checkException();
+        void checkException(bool flag = true);
 
         bool hasTree();
 
@@ -104,7 +104,7 @@ public:
 
         void toEnd();
 
-        void checkException();
+        void checkException(bool flag = true);
 
         bool hasTree();
 
@@ -189,11 +189,14 @@ bool Tree<Key, Data>::Reverse_Iterator::hasNext() {
 }
 
 template<class Key, class Data>
-void Tree<Key, Data>::Reverse_Iterator::checkException() {
+void Tree<Key, Data>::Reverse_Iterator::checkException(bool flag) {
     if (!hasTree() || tree->isEmpty()) {
         throw runtime_error("EXCEPTION!");
     }
-    if (!hasNext()) {
+    if (!hasNext() && stack.empty()) {
+        throw runtime_error("EXCEPTION!");
+    }
+    if (!hasNext() && flag) {
         throw runtime_error("EXCEPTION!");
     }
 }
@@ -251,7 +254,12 @@ void Tree<Key, Data>::Reverse_Iterator::operator++(int) {
 
 template<class Key, class Data>
 void Tree<Key, Data>::Reverse_Iterator::operator--() {
-    checkException();
+    checkException(false);
+    if (!hasNext() && !stack.empty()) {
+        current = stack.top();
+        stack.pop();
+        return;
+    }
     if (current->right != nullptr) {
         current = current->right;
         while (current->left != nullptr) {
@@ -269,7 +277,12 @@ void Tree<Key, Data>::Reverse_Iterator::operator--() {
 
 template<class Key, class Data>
 void Tree<Key, Data>::Reverse_Iterator::operator--(int) {
-    checkException();
+    checkException(false);
+    if (!hasNext() && !stack.empty()) {
+        current = stack.top();
+        stack.pop();
+        return;
+    }
     if (current->right != nullptr) {
         current = current->right;
         while (current->left != nullptr) {
@@ -328,13 +341,17 @@ void Tree<Key, Data>::Iterator::operator++() {
 }
 
 template<class Key, class Data>
-void Tree<Key, Data>::Iterator::checkException() {
+void Tree<Key, Data>::Iterator::checkException(bool flag) {
     if (!hasTree() || tree->isEmpty()) {
         throw runtime_error("EXCEPTION!");
     }
-    if (!hasNext()) {
+    if (!hasNext() && stack.empty()) {
         throw runtime_error("EXCEPTION!");
     }
+    if (!hasNext() && flag) {
+        throw runtime_error("EXCEPTION!");
+    }
+
 }
 
 template<class Key, class Data>
@@ -385,7 +402,12 @@ void Tree<Key, Data>::Iterator::operator++(int) {
 
 template<class Key, class Data>
 void Tree<Key, Data>::Iterator::operator--() {
-    checkException();
+    checkException(false);
+    if (!hasNext() && !stack.empty()) {
+        current = stack.top();
+        stack.pop();
+        return;
+    }
     if (current->left != nullptr) {
         current = current->left;
         while (current->right != nullptr) {
@@ -403,7 +425,12 @@ void Tree<Key, Data>::Iterator::operator--() {
 
 template<class Key, class Data>
 void Tree<Key, Data>::Iterator::operator--(int) {
-    checkException();
+    checkException(false);
+    if (!hasNext() && !stack.empty()) {
+        current = stack.top();
+        stack.pop();
+        return;
+    }
     if (current->left != nullptr) {
         current = current->left;
         while (current->right != nullptr) {
