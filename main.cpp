@@ -180,27 +180,26 @@ int main() {
     Tree<>::Reverse_Iterator reverseIterator1(&tree);
     bool Flag = true;
     while (Flag) {
-        cout << "______________ Menu ________________\n"
-                "1.  Output the size of list          |\n"
-                "2.  Cleaning a list                  |\n"
-                "3.  Is list empty?                   |\n"
-                "4.  Get element by key               |\n"
-                "5.  Set element by key               |\n"
-                "6.  Push element by key              |\n"
-                "7.  Remove element by key            |\n"
-                "8.  Request begin for iterator       |\n"
-                "9.  Request rbegin for iterator      |\n"
-                "10. Request end for iterator         |\n"
-                "11. Request rend for iterator        |\n"
-                "12. Functions of iterator            |\n"
-                "13. Request test_count last operation|\n"
-                "14. Print a tree                     |\n"
-                "15. Print a keys of tree             |\n"
-                "16. Poryadkoviy number by key        |\n"
-                "17. Test 1                           |\n"
-                "18. Test 2                           |\n"
-                "0.  Exit                             |\n"
-                "-------------------------------------\n"
+        cout << "______________ Menu ____________________\n"
+                "1.  Output the size of tree             |\n"
+                "2.  Cleaning a tree                     |\n"
+                "3.  Is tree empty?                      |\n"
+                "4.  Get element by key                  |\n"
+                "5.  Set element by key                  |\n"
+                "6.  Push element by key                 |\n"
+                "7.  Remove element by key               |\n"
+                "8.  Request begin for iterator          |\n"
+                "9.  Request rbegin for reverse_iterator |\n"
+                "10. Request end for iterator            |\n"
+                "11. Request rend for reverse_iterator   |\n"
+                "12. Functions of iterator               |\n"
+                "13. Print a tree                        |\n"
+                "14. Print a keys of tree                |\n"
+                "15. Poryadkoviy number by key           |\n"
+                "16. Test rand                           |\n"
+                "17. Test ord                            |\n"
+                "0.  Exit                                |\n"
+                "----------------------------------------\n"
                 "\n"
                 "Input: ";
         int in;
@@ -245,6 +244,7 @@ int main() {
                 cout << "Input the value: ";
                 TYPE value;
                 cin >> value;
+                cout << "####### ACTION #######\n";
                 cout << boolalpha << tree.setNode(key, value) << endl;
                 break;
             }
@@ -256,6 +256,7 @@ int main() {
                 cout << "Input the value: ";
                 TYPE value;
                 cin >> value;
+                cout << "####### ACTION #######\n";
                 cout << boolalpha << tree.addNode(key, value) << endl;
                 break;
             }
@@ -278,16 +279,6 @@ int main() {
 
                 break;
             }
-            case 10: {
-                ClearConsole();
-                try {
-                    iterator = tree.end();
-                } catch (runtime_error error) {
-                    cout << error.what() << endl;
-                }
-                break;
-            }
-
             case 9: {
                 ClearConsole();
                 try {
@@ -296,6 +287,15 @@ int main() {
                     cout << error.what() << endl;
                 }
 
+                break;
+            }
+            case 10: {
+                ClearConsole();
+                try {
+                    iterator = tree.end();
+                } catch (runtime_error error) {
+                    cout << error.what() << endl;
+                }
                 break;
             }
             case 11: {
@@ -330,7 +330,7 @@ int main() {
                             ClearConsole();
                             bool f = true;
                             while (f) {
-                                cout << "Choose iterator: usual(1) or reverse(2)? (1/2)\n";
+                                cout << "Choose iterator: direct(1) or reverse(2)? (1/2)\n";
                                 int in;
                                 cin >> in;
                                 if (in == 1) {
@@ -389,7 +389,7 @@ int main() {
                             ClearConsole();
                             bool f = true;
                             while (f) {
-                                cout << "Choose iterator: usual(1) or reverse(2)? (1/2)\n";
+                                cout << "Choose iterator: direct(1) or reverse(2)? (1/2)\n";
                                 int in;
                                 cin >> in;
                                 if (in == 1) {
@@ -448,7 +448,7 @@ int main() {
                             ClearConsole();
                             bool f = true;
                             while (f) {
-                                cout << "Choose iterator: usual(1) or reverse(2)? (1/2)\n";
+                                cout << "Choose iterator: direct(1) or reverse(2)? (1/2)\n";
                                 int in;
                                 cin >> in;
                                 if (in == 1) {
@@ -513,7 +513,7 @@ int main() {
                             ClearConsole();
                             bool f = true;
                             while (f) {
-                                cout << "Choose iterator: usual(1) or reverse(2)? (1/2)\n";
+                                cout << "Choose iterator: direct(1) or reverse(2)? (1/2)\n";
                                 int in;
                                 cin >> in;
                                 if (in == 1) {
@@ -572,7 +572,7 @@ int main() {
                             ClearConsole();
                             bool f = true;
                             while (f) {
-                                cout << "Choose iterator: usual(1) or reverse(2)? (1/2)\n";
+                                cout << "Choose iterator: direct(1) or reverse(2)? (1/2)\n";
                                 int in;
                                 cin >> in;
                                 if (in == 1) {
@@ -632,16 +632,25 @@ int main() {
                             ClearConsole();
                             bool f = true;
                             while (f) {
-                                cout << "Choose iterator: usual(1) or reverse(2)? (1/2)\n";
+                                cout << "Choose iterator: direct(1) or reverse(2)? (1/2)\n";
                                 int in;
                                 cin >> in;
                                 if (in == 1) {
                                     cout << "####### ACTION #######\n";
-                                    cout << boolalpha << (iterator == iterator1) << endl;
+                                    try {
+                                        cout << boolalpha << (iterator == iterator1) << endl;
+                                    } catch (runtime_error error) {
+                                        cout << error.what() << endl;
+                                    }
+
                                     f = false;
                                 } else if (in == 2) {
                                     cout << "####### ACTION #######\n";
-                                    cout << boolalpha << (reverseIterator == reverseIterator1) << endl;
+                                    try {
+                                        cout << boolalpha << (reverseIterator == reverseIterator1) << endl;
+                                    } catch (runtime_error error) {
+                                        cout << error.what() << endl;
+                                    }
                                     f = false;
                                 } else cout << "Incorrect input! Please repeat...\n";
                             }
@@ -651,16 +660,24 @@ int main() {
                             ClearConsole();
                             bool f = true;
                             while (f) {
-                                cout << "Choose iterator: usual(1) or reverse(2)? (1/2)\n";
+                                cout << "Choose iterator: direct(1) or reverse(2)? (1/2)\n";
                                 int in;
                                 cin >> in;
                                 if (in == 1) {
                                     cout << "####### ACTION #######\n";
-                                    cout << boolalpha << (iterator != iterator1) << endl;
+                                    try {
+                                        cout << boolalpha << (iterator != iterator1) << endl;
+                                    } catch (runtime_error error) {
+                                        cout << error.what() << endl;
+                                    }
                                     f = false;
                                 } else if (in == 2) {
                                     cout << "####### ACTION #######\n";
-                                    cout << boolalpha << (reverseIterator != reverseIterator1) << endl;
+                                    try {
+                                        cout << boolalpha << (reverseIterator != reverseIterator1) << endl;
+                                    } catch (runtime_error error) {
+                                        cout << error.what() << endl;
+                                    }
                                     f = false;
                                 } else cout << "Incorrect input! Please repeat...\n";
                             }
@@ -672,19 +689,19 @@ int main() {
                 }
                 break;
             }
-            case 15: {
-                ClearConsole();
-                tree.printKeys();
-                cout << endl;
-                break;
-            }
-            case 14: {
+            case 13: {
                 ClearConsole();
                 tree.printTree();
                 cout << endl;
                 break;
             }
-            case 16: {
+            case 14: {
+                ClearConsole();
+                tree.printKeys();
+                cout << endl;
+                break;
+            }
+            case 15: {
                 ClearConsole();
                 cout << "Input the key: ";
                 int key;
@@ -697,26 +714,31 @@ int main() {
                 }
                 break;
             }
+            case 16: {
+                ClearConsole();
+                cout << "Input the count of elements: ";
+                int count;
+                cin >> count;
+
+                try {
+                    test_rand(count);
+                } catch (exception e) {}
+                break;
+            }
             case 17: {
                 ClearConsole();
                 cout << "Input the count of elements: ";
                 int count;
                 cin >> count;
-                test_rand(count);
-                break;
-            }
-            case 18: {
-                ClearConsole();
-                cout << "Input the count of elements: ";
-                int count;
-                cin >> count;
-                test_rand(count);
+                try {
+                    test_ord(count);
+                } catch (exception e) {}
                 break;
             }
             case 777: {
                 srand(time(0));
                 for (int i = 0; i < 10; ++i) {
-                    tree.addNode(rand() % 101 + 1,rand() % 101 + 1);
+                    tree.addNode(rand() % 101 + 1, rand() % 101 + 1);
                 }
                 break;
             }

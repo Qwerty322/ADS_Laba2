@@ -8,7 +8,7 @@ using namespace std;
 
 template<class Key = int, class Data = int>
 class Tree {  // Класс бинарного дерева
-private:
+protected:
     class Node {
     private:
         Key key;  // ключ
@@ -34,7 +34,7 @@ private:
     int size;  // размер дерева
     int count_view;  // вспомогательная переменная
 
-    Node *addNode(Node *node, Key key, Data data, bool &flag);  // рекурсивная функция для добавления узла
+    virtual Node *addNode(Node *node, Key key, Data data, bool &flag);  // рекурсивная функция для добавления узла
 
     Node *getNode(Node *node, Key key);  // рекурсивная функция для получения данных узла
 
@@ -61,7 +61,6 @@ public:
         Tree *tree;
         Node *current;
         stack<Node *> stack;
-
 
     public:
         explicit Iterator(Tree<Key, Data> *tree);
@@ -191,7 +190,7 @@ bool Tree<Key, Data>::Reverse_Iterator::hasNext() {
 
 template<class Key, class Data>
 void Tree<Key, Data>::Reverse_Iterator::checkException() {
-    if (!hasTree()) {
+    if (!hasTree() || tree->isEmpty()) {
         throw runtime_error("EXCEPTION!");
     }
     if (!hasNext()) {
@@ -260,7 +259,6 @@ void Tree<Key, Data>::Reverse_Iterator::operator--() {
             current = current->left;
         }
     } else {
-//        Node *tmp = stack.top();
         if (stack.empty() || current == stack.top()->right) {
             throw runtime_error("EXCEPTION");
         }
@@ -289,11 +287,15 @@ void Tree<Key, Data>::Reverse_Iterator::operator--(int) {
 
 template<class Key, class Data>
 bool Tree<Key, Data>::Reverse_Iterator::operator==(Tree::Reverse_Iterator right) {
+    checkException();
+    right.checkException();
     return this->current == right.current;
 }
 
 template<class Key, class Data>
 bool Tree<Key, Data>::Reverse_Iterator::operator!=(Tree::Reverse_Iterator right) {
+    checkException();
+    right.checkException();
     return this->current != right.current;
 }
 
@@ -327,7 +329,7 @@ void Tree<Key, Data>::Iterator::operator++() {
 
 template<class Key, class Data>
 void Tree<Key, Data>::Iterator::checkException() {
-    if (!hasTree()) {
+    if (!hasTree() || tree->isEmpty()) {
         throw runtime_error("EXCEPTION!");
     }
     if (!hasNext()) {
@@ -419,11 +421,15 @@ void Tree<Key, Data>::Iterator::operator--(int) {
 
 template<class Key, class Data>
 bool Tree<Key, Data>::Iterator::operator==(Tree::Iterator right) {
+    checkException();
+    right.checkException();
     return this->current == right.current;
 }
 
 template<class Key, class Data>
 bool Tree<Key, Data>::Iterator::operator!=(Tree::Iterator right) {
+    checkException();
+    right.checkException();
     return this->current != right.current;
 }
 
@@ -476,28 +482,31 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::getNode(Tree::Node *node, Key k
 
 template<class Key, class Data>
 typename Tree<Key, Data>::Node *Tree<Key, Data>::addNode(Tree::Node *node, Key key, Data data, bool &flag) {
+    count_view++;
     if (root == nullptr) {
         Node *tmp = new Node(key, data);
         tmp->count++;
-        size++;
         root = tmp;
         return tmp;
     }
     if (node == nullptr) {
         Node *tmp = new Node(key, data);
         tmp->count++;
-        size++;
         return tmp;
     } else {
         if (key < node->getKey()) {
             node->count++;
             node->left = addNode(node->left, key, data, flag);
-            count_view++;
+            if (!flag) {
+                node->count--;
+            }
             return node;
         } else if (key > node->getKey()) {
             node->count++;
             node->right = addNode(node->right, key, data, flag);
-            count_view++;
+            if (!flag) {
+                node->count--;
+            }
             return node;
         } else {
             flag = false;
@@ -551,6 +560,9 @@ bool Tree<Key, Data>::addNode(Key key, Data data) {
     count_view = 0;
     bool flag = true;
     addNode(root, key, data, flag);
+    if (flag) {
+        size++;
+    }
     return flag;
 }
 
@@ -614,8 +626,10 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::findMinNode(Tree::Node *node) {
 
 template<class Key, class Data>
 typename Tree<Key, Data>::Node *Tree<Key, Data>::removeNode(Tree::Node *node, Key key, bool &flag) {
+    count_view++;
     if (node == nullptr) {
         flag = true;
+        count_view--;
         return nullptr;
     }
     if (node->getKey() > key) {
@@ -623,14 +637,12 @@ typename Tree<Key, Data>::Node *Tree<Key, Data>::removeNode(Tree::Node *node, Ke
         if (!flag) {
             node->count--;
         }
-        count_view++;
         return node;
     } else if (node->getKey() < key) {
         node->right = removeNode(node->right, key, flag);
         if (!flag) {
             node->count--;
         }
-        count_view++;
         return node;
     } else if (node->getKey() == key) {
         if (node->left && node->right) {
@@ -659,11 +671,11 @@ template<class Key, class Data>
 bool Tree<Key, Data>::removeNode(Key key) {
     count_view = 0;
     bool error_flag = false;
-    removeNode(root, key, error_flag);
+    root = removeNode(root, key, error_flag);
     if (!error_flag) {
         size--;
-        return true;
-    } else return false;
+    }
+    return !error_flag;
 }
 
 template<class Key, class Data>
