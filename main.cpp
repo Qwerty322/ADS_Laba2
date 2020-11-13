@@ -312,7 +312,7 @@ int main() {
                 bool iter = true;
                 while (iter) {
                     cout << "_______Iterator menu________\n"
-                            "1. Create a second iterator |\n"
+                            "1. Init a second iterator   |\n"
                             "2. Read access (*)          |\n"
                             "3. Write access (*)         |\n"
                             "4. Go to next (++)          |\n"
