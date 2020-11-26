@@ -34,7 +34,7 @@ protected:
     int size;  // размер дерева
     int count_view;  // вспомогательная переменная
 
-    virtual Node *addNode(Node *node, Key key, Data data, bool &flag);  // рекурсивная функция для добавления узла
+    Node *addNode(Node *node, Key key, Data data, bool &flag);  // рекурсивная функция для добавления узла
 
     Node *getNode(Node *node, Key key);  // рекурсивная функция для получения данных узла
 
